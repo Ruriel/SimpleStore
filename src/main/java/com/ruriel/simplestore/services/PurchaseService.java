@@ -50,6 +50,8 @@ public class PurchaseService {
     }
 
     private void validateStatus(Status oldStatus, Status newStatus) {
+        if(oldStatus.equals(newStatus))
+            throw new StatusAreTheSameException();
         if (oldStatus.equals(Status.PENDING) &&
                 Objects.equals(Status.FINISHED, newStatus)
                 ||
@@ -80,7 +82,7 @@ public class PurchaseService {
 
     public Purchase patch(Long id, Purchase purchase) {
         var foundPurchase = this.findById(id);
-        if (purchase.getStatus() != null && !purchase.getStatus().equals(foundPurchase.getStatus())) {
+        if (purchase.getStatus() != null) {
             validateStatus(foundPurchase.getStatus(), purchase.getStatus());
             foundPurchase.setStatus(purchase.getStatus());
             foundPurchase.setUpdatedAt(LocalDateTime.now());
