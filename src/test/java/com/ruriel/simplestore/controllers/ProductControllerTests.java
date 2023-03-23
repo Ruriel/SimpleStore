@@ -1,9 +1,7 @@
 package com.ruriel.simplestore.controllers;
 
 import com.ruriel.simplestore.api.v1.controllers.ProductController;
-import com.ruriel.simplestore.api.v1.resources.AgendaRequest;
 import com.ruriel.simplestore.api.v1.resources.ProductRequest;
-import com.ruriel.simplestore.entities.Agenda;
 import com.ruriel.simplestore.entities.Product;
 import com.ruriel.simplestore.services.ProductService;
 import org.junit.jupiter.api.Test;
@@ -14,7 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 
-import java.util.HashSet;
 
 import static org.mockito.Mockito.*;
 

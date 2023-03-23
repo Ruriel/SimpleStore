@@ -21,11 +21,13 @@ public class ProductRequest {
     private String description;
 
     @NotNull
+    @Positive(message = "At least one product must be registered")
     private Long quantity;
 
     @NotNull
+    @DecimalMin(value = "0.0", message = "Price must be positive")
     @Digits(fraction = 2, integer = 5, message = "Price should have a integer part of 5 digits maximum " +
-            "and the fractionary digits should not exceed 2")
+            "and the fractional part should not exceed 2")
     private BigDecimal price;
 
 }

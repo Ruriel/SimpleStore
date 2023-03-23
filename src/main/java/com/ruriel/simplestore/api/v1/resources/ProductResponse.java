@@ -29,5 +29,9 @@ public class ProductResponse {
 
     private LocalDateTime updatedAt;
 
-    private Integer quantity;
+    private Long quantity;
+
+    public boolean getAvailable(){
+        return quantity > 0;
+    }
 }
