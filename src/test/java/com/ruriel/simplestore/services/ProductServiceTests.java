@@ -1,7 +1,6 @@
 package com.ruriel.simplestore.services;
 
 import com.ruriel.simplestore.api.exceptions.ResourceNotFoundException;
-import com.ruriel.simplestore.entities.Agenda;
 import com.ruriel.simplestore.entities.Product;
 import com.ruriel.simplestore.repositories.ProductRepository;
 import org.junit.jupiter.api.Test;
