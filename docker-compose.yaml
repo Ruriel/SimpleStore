@@ -14,12 +14,17 @@ services:
     ports:
       - ${POSTGRES_INTERNAL_PORT}:${POSTGRES_EXTERNAL_PORT}
     volumes:
-      - ./data/postgres:/var/lib/postgresql/data
-    
+      - .${VOLUME_FOLDER}:/var/lib/postgresql/data
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
   app:
     container_name: app
     depends_on: 
       - db
+      - rabbitmq
     build:
       context: .
     environment:
@@ -34,5 +39,6 @@ services:
       SPRING_PROFILES_ACTIVE: 'production'
       TZ: ${TZ}
       LOG_FOLDER: ${LOG_FOLDER}
+      SPRING_RABBITMQ_HOST: rabbitmq
     ports:
       -  ${SERVER_INTERNAL_PORT}:${SERVER_EXTERNAL_PORT}

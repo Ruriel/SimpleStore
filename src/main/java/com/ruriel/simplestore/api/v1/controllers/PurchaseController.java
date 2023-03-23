@@ -3,6 +3,8 @@ package com.ruriel.simplestore.api.v1.controllers;
 import com.ruriel.simplestore.api.v1.resources.*;
 import com.ruriel.simplestore.entities.Purchase;
 import com.ruriel.simplestore.services.PurchaseService;
+import com.ruriel.simplestore.services.rabbitmq.RabbitMQSenderService;
+import com.ruriel.simplestore.services.rabbitmq.payload.PurchasePayload;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,7 @@ public class PurchaseController {
 
     private final PurchaseService purchaseService;
 
+    private final RabbitMQSenderService rabbitMQSenderService;
     @GetMapping
     public ResponseEntity<PaginatedResponse<PurchaseResponse>> findPage(@PageableDefault(sort = {"createdAt"}) Pageable pageable) {
         log.trace("GET /purchase");
@@ -48,6 +51,8 @@ public class PurchaseController {
         var purchase = modelMapper.map(purchaseRequest, Purchase.class);
         var savedPurchase = purchaseService.create(purchase);
         var responseBody = modelMapper.map(savedPurchase, PurchaseResponse.class);
+        var payload = modelMapper.map(savedPurchase, PurchasePayload.class);
+        rabbitMQSenderService.send(payload);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
     }
 
@@ -57,6 +62,10 @@ public class PurchaseController {
         var purchase = modelMapper.map(purchaseRequest, Purchase.class);
         var patchedPurchased = purchaseService.patch(id, purchase);
         var responseBody = modelMapper.map(patchedPurchased, PurchaseResponse.class);
+        if(purchaseRequest.getStatus() != null) {
+            var payload = modelMapper.map(patchedPurchased, PurchasePayload.class);
+            rabbitMQSenderService.send(payload);
+        }
         return  ResponseEntity.status(HttpStatus.OK).body(responseBody);
     }
 }
