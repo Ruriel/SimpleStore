@@ -8,6 +8,7 @@ import com.ruriel.simplestore.entities.PurchaseItem;
 import com.ruriel.simplestore.entities.Product;
 import com.ruriel.simplestore.entities.Status;
 import com.ruriel.simplestore.services.PurchaseService;
+import com.ruriel.simplestore.services.rabbitmq.RabbitMQSenderService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,6 +30,8 @@ class PurchaseControllerTests {
     @Mock
     private ModelMapper modelMapper;
 
+    @Mock
+    private RabbitMQSenderService rabbitMQSenderService;
     @InjectMocks
     private PurchaseController purchaseController;
 
