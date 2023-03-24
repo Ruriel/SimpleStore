@@ -7,7 +7,6 @@ import jakarta.persistence.Enumerated;
 import lombok.*;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,12 +14,6 @@ import java.time.LocalDateTime;
 public class PurchasePayload implements Serializable {
     @JsonProperty
     private Long id;
-
-    @JsonProperty
-    private LocalDateTime createdAt;
-
-    @JsonProperty
-    private LocalDateTime updatedAt;
 
     @JsonProperty
     @Enumerated(EnumType.STRING)

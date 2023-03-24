@@ -12,10 +12,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class RabbitMQSenderService {
-    @Autowired
-    private Queue queue;
-    @Autowired
-    private AmqpTemplate amqpTemplate;
+    private final Queue queue;
+    private final AmqpTemplate amqpTemplate;
 
     public void send(PurchasePayload purchasePayload) {
         amqpTemplate.convertAndSend(queue.getName(), purchasePayload);
