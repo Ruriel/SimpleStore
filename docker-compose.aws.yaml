@@ -1,28 +1,7 @@
 version: '3.8'
 services:
-  db:
-    container_name: db
-    hostname: ${MYSQL_HOST}
-    image: mysql:8.0
-    restart: on-failure
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      TZ: ${TZ}
-    ports:
-      - ${MYSQL_INTERNAL_PORT}:${MYSQL_EXTERNAL_PORT}
-    volumes:
-      - ${VOLUME_FOLDER}:/var/lib/mysql
-  rabbitmq:
-    image: rabbitmq:management
-    ports:
-      - "5672:5672"
-      - "15672:15672"
   app:
     container_name: app
-    depends_on: 
-      - db
-      - rabbitmq
     build:
       context: .
     environment:
@@ -40,7 +19,5 @@ services:
       RABBIT_MQ_PORT: ${RABBIT_MQ_PORT}
       RABBIT_MQ_USERNAME: ${RABBIT_MQ_USERNAME}
       RABBIT_MQ_PASSWORD: ${RABBIT_MQ_PASSWORD}
-      RABBIT_MQ_CONCURRENT_CONSUMERS: ${RABBIT_MQ_CONCURRENT_CONSUMERS}
-      RABBIT_MQ_MAX_CONCURRENT_CONSUMERS: ${RABBIT_MQ_MAX_CONCURRENT_CONSUMERS}
     ports:
       -  ${SERVER_INTERNAL_PORT}:${SERVER_EXTERNAL_PORT}

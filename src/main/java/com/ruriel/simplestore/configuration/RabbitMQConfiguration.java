@@ -47,7 +47,7 @@ public class RabbitMQConfiguration {
     private Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer;
     @Bean
     Queue queue() {
-        return new Queue(queueName, false);
+        return new Queue(queueName, true);
     }
 
     @Bean

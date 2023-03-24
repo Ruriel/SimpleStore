@@ -51,21 +51,18 @@ public class PurchaseController {
         var purchase = modelMapper.map(purchaseRequest, Purchase.class);
         var savedPurchase = purchaseService.create(purchase);
         var responseBody = modelMapper.map(savedPurchase, PurchaseResponse.class);
-        var payload = modelMapper.map(savedPurchase, PurchasePayload.class);
-        rabbitMQSenderService.send(payload);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseBody);
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<PurchaseResponse> patch(@PathVariable Long id, @RequestBody @Valid PatchPurchaseRequest purchaseRequest){
         log.trace(String.format("PATCH /purchase/%d: %s", id, purchaseRequest.toString()));
-        var purchase = modelMapper.map(purchaseRequest, Purchase.class);
-        var patchedPurchased = purchaseService.patch(id, purchase);
-        var responseBody = modelMapper.map(patchedPurchased, PurchaseResponse.class);
         if(purchaseRequest.getStatus() != null) {
-            var payload = modelMapper.map(patchedPurchased, PurchasePayload.class);
+            purchaseService.validateStatus(id, purchaseRequest.getStatus());
+            var payload = modelMapper.map(purchaseRequest, PurchasePayload.class);
+            payload.setId(id);
             rabbitMQSenderService.send(payload);
         }
-        return  ResponseEntity.status(HttpStatus.OK).body(responseBody);
+        return  ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

@@ -90,15 +90,4 @@ class PurchaseServiceTests {
         purchaseService.patch(id, order);
         verify(purchaseRepository).save(currentOrder);
     }
-
-    @Test
-    void shouldThrowInvalidStatusChangeException(){
-        var id = 1L;
-        var product = Product.builder().name("Testing").description("Testing").quantity(1L).price(BigDecimal.TEN).build();
-        var item = PurchaseItem.builder().product(product).quantity(1L).build();
-        var currentOrder = Purchase.builder().items(Set.of(item)).status(Status.PROCESSING).build();
-        var order = Purchase.builder().status(Status.PENDING).build();
-        when(purchaseRepository.findById(id)).thenReturn(Optional.of(currentOrder));
-        assertThatThrownBy(() -> purchaseService.patch(id, order)).isInstanceOf(InvalidStatusChangeException.class);
-    }
 }

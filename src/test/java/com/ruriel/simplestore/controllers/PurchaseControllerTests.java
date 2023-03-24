@@ -9,6 +9,7 @@ import com.ruriel.simplestore.entities.Product;
 import com.ruriel.simplestore.entities.Status;
 import com.ruriel.simplestore.services.PurchaseService;
 import com.ruriel.simplestore.services.rabbitmq.RabbitMQSenderService;
+import com.ruriel.simplestore.services.rabbitmq.payload.PurchasePayload;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -64,11 +65,11 @@ class PurchaseControllerTests {
     @Test
     void shouldPatch() {
         var id = 1L;
-        var purchase = Purchase.builder().status(Status.PROCESSING).build();
-        var purchaseRequest = new PatchPurchaseRequest();
-        when(modelMapper.map(purchaseRequest, Purchase.class)).thenReturn(purchase);
+        var purchaseRequest = new PatchPurchaseRequest(Status.PROCESSING);
+        var purchasePayload = new PurchasePayload(id, Status.PROCESSING);
+        when(modelMapper.map(purchaseRequest, PurchasePayload.class)).thenReturn(purchasePayload);
         purchaseController.patch(id, purchaseRequest);
-        verify(purchaseService).patch(id, purchase);
+        verify(rabbitMQSenderService).send(purchasePayload);
     }
 
 }
